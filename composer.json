@@ -1,0 +1,22 @@
+{
+    "name": "crisu83/yii-clientscript",
+    "description": "A more advanced version of the client script component in Yii.",
+    "keywords": ["yii", "extension", "client", "css", "script"],
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Christoffer Niska",
+            "email": "christoffer.niska@gmail.com",
+            "homepage": "http://www.cniska.net"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "http://packages.phundament.com"
+        }
+    ],
+    "require-dev": {
+        "yiisoft/yii": ">=1.1.14"
+    }
+}
