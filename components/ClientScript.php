@@ -13,6 +13,8 @@
  */
 class ClientScript extends CClientScript
 {
+    public $skipOnAjax = array();
+
     /**
      * @var array the desired order for registering css files.
      */
@@ -29,9 +31,23 @@ class ClientScript extends CClientScript
      */
     public function renderHead(&$output)
     {
+        $this->filterScripts();
         $this->reorderFiles();
         $this->processFiles();
         parent::renderHead($output);
+    }
+
+    protected function filterScripts()
+    {
+        if (Yii::app()->request->isAjaxRequest) {
+            foreach ($this->skipOnAjax as $filename) {
+                $script = $this->findScriptFile($filename);
+                if ($script !== false) {
+                    list($position, $url) = $script;
+                    unset($this->scriptFiles[$position][$url]);
+                }
+            }
+        }
     }
 
     /**
@@ -47,6 +63,7 @@ class ClientScript extends CClientScript
                 if (isset($url, $media)) {
                     $tmp[$url] = $media;
                 }
+                unset($this->cssFiles[$url]);
             }
         }
         foreach ($tmp as $url => $media) {
@@ -63,6 +80,7 @@ class ClientScript extends CClientScript
                     }
                     $tmp[$position][$url] = $url;
                 }
+                unset($this->scriptFiles[$position][$url]);
             }
         }
         foreach ($tmp as $position => $urls) {
@@ -81,7 +99,6 @@ class ClientScript extends CClientScript
     {
         foreach ($this->cssFiles as $url => $media) {
             if ($filename === $this->resolveFilename($url)) {
-                unset($this->cssFiles[$url]);
                 return array($url, $media);
             }
         }
@@ -97,7 +114,6 @@ class ClientScript extends CClientScript
         foreach ($this->scriptFiles as $position => $urls) {
             foreach ($urls as $url) {
                 if ($filename === $this->resolveFilename($url)) {
-                    unset($this->scriptFiles[$position][$url]);
                     return array($position, $url);
                 }
             }
