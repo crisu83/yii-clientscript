@@ -174,7 +174,7 @@ class ClientScript extends CClientScript
     {
         if (($filePath = $this->resolveFilePath($url)) !== false) {
             $modified = filemtime($filePath);
-            $url .= '?_=' . $modified;
+            $url .= '?_=' . md5($modified);
         }
         return $url;
     }
